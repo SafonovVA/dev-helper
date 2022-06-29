@@ -1,0 +1,47 @@
+@{
+    ViewBag.Title = "Unicode";
+}
+
+<div class="content-center">
+    <div class="row">
+        <div class="col-md-12">
+                <input type="text" name="type" id="type" value="encode" readonly>
+
+        </div>
+    </div>
+    <textarea name="from" id="first" cols="30" rows="10"></textarea>
+    <i id="swap" class="bx bx-transfer-alt icon"></i>
+    <textarea name="to" id="second" cols="30" rows="10"></textarea>
+</div>
+
+@section Scripts{
+    <script>
+    document.getElementById('swap').addEventListener('click', function() {
+        const type = document.getElementById('type');
+        type.value = type.value === 'encode' ? 'decode': 'encode';
+        
+        const first = document.getElementById('first');
+        const second = document.getElementById('second');
+        let value = first.value;
+        first.value = second.value;
+        second.value = value;
+    });
+    document.getElementById('first').addEventListener('input', async function() {
+        console.log(123);
+        await sleep(500);
+        $.ajax({
+            type: 'GET',
+            url: '/Unicode/Convert',
+            data: {
+                from: encodeURIComponent(document.getElementById('first').value),
+                type: document.getElementById('type').value
+            },
+            success: (response) => document.getElementById('second').value = response
+        })
+    });
+    
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    </script>
+}
